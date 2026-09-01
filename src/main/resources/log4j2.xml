@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Two layouts on purpose. The console one is for humans; the audit one is parsed
+     downstream, so its format is part of the contract. Both use %msg, which Log4j
+     2.15 changed (message lookups are no longer resolved by default). -->
+<Configuration status="WARN">
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d{ISO8601} %-5level [%t] %logger{36} %X{correlationId} - %msg%n"/>
+    </Console>
+    <Console name="Audit" target="SYSTEM_OUT">
+      <PatternLayout pattern="ts=%d{ISO8601} level=%level correlation_id=%X{correlationId} logger=%logger %msg%n"/>
+    </Console>
+  </Appenders>
+  <Loggers>
+    <Logger name="com.example.payments.AuditLog" level="info" additivity="false">
+      <AppenderRef ref="Audit"/>
+    </Logger>
+    <Root level="info">
+      <AppenderRef ref="Console"/>
+    </Root>
+  </Loggers>
+</Configuration>
